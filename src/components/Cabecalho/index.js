@@ -1,18 +1,20 @@
-import React from 'react'
-//import Navegacao from './Navegation' <NavBar />
-import './cabecalho.css' 
-class Cabecalho extends React.Component {
+import React, { Component } from 'react'
+import './cabecalho.css'
+// import './navMenu.css'
+
+class Cabecalho extends Component {
     render() {
         return (
-            <header className="Cabecalho">
-                <h1> Twitelum </h1>
-
-               {this.props.children}
+            <header className="cabecalho">
+                <div className="cabecalho__container container">
+                    <h1 className="cabecalho__logo">
+                        <a href="/">Twitelum</a>
+                    </h1>
+                    { this.props.children }
+                </div>
             </header>
         )
     }
-
 }
 
-export default Cabecalho;
-
+export default Cabecalho
