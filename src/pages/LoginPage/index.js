@@ -6,9 +6,11 @@ import './loginPage.css'
 
 
 import If from './../../components/If'
+import { NotificacaoContext } from './../../contexts/notificacao';
 
 class LoginPage extends Component {
 
+    static contextType = NotificacaoContext;
     state = {
         erroMessage: null
 
@@ -55,11 +57,11 @@ class LoginPage extends Component {
 
                 if (resposta.ok) {
                     localStorage.setItem('token', data.token);
+                    this.context.setMensagem('Login efetuado com sucesso! Bem vindo!');
                     this.props.history.push('/');
                 }
                 else {
-                    //this.props.LoginFailed = true;
-
+                    //this.props.LoginFailed = true; 
                     this.setState({ erroMessage: data.message })
                     //this.LoginFailedMsg = data.message;
 
