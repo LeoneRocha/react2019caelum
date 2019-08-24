@@ -6,6 +6,9 @@ import Widget from './../components/Widget'
 import TrendsArea from './../components/TrendsArea'
 import Tweet from './../components/Tweet' 
 
+import TweetService from './../contexts/twetservice' 
+
+
 class App extends Component {
 
     state = {
@@ -26,7 +29,12 @@ class App extends Component {
 
         this.setState({
             novoTweet: '',
-            listaTweets: [this.state.novoTweet, ...this.state.listaTweets]
+      //      listaTweets: [this.state.novoTweet, ...this.state.listaTweets]
+
+      listaTweets: [this.state.novoTweet, ...this.state.listaTweets]
+
+
+
         }, () => console.log(this.state.listaTweets)); 
     } 
     render() {
@@ -46,8 +54,12 @@ class App extends Component {
                                     <span className={`novoTweet__status ${!this.novoTweetIsValid() ? 'novoTweet__status--invalido' : ''}`}>{this.state.novoTweet.length}/140</span>
                                     <textarea className="novoTweet__editor" placeholder="O que está acontecendo?" onChange={(evento) => {
                                         //console.log(evento.target.value)
-
                                         this.setState({ novoTweet: evento.target.value })
+
+                                     //   this.setState({ novoTweet: evento.target.value })
+
+                                     TweetService.sal
+
                                     }} value={novoTweet}></textarea>
                                 </div>
                                 <button type="submit" className="novoTweet__envia" disabled={!this.novoTweetIsValid()}>Tweetar</button>

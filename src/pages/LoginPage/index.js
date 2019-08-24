@@ -27,7 +27,8 @@ class LoginPage extends Component {
         const login = referenciasForm.login.value;
         const senha = referenciasForm.senha.value;
 
-        const url = "http://twitelum-api.herokuapp.com/login";
+        //const url = "http://api-twitelum.herokuapp.com/login";
+        const url = "http://api-twitelum.herokuapp.com/login";
         // console.log(url) artdiniz 123456
         fetch(url,
             {
