@@ -16,15 +16,15 @@ import "./assets/css/novoTweet.css";
 
 import Rotas from "./routers"
 import { BrowserRouter } from 'react-router-dom'
-
+import { NotificacaoProvider } from  "./contexts/notificacao";
 import * as serviceWorker from "./serviceWorker";
 
-ReactDOM.render(
-    
+ReactDOM.render( 
+        <NotificacaoProvider >
         <BrowserRouter>
             <Rotas />
         </BrowserRouter>
- 
+ </NotificacaoProvider>
         , document.getElementById("root")) ;
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -4,7 +4,7 @@ import NavMenu from './../components/NavMenu'
 import Dashboard from './../components/Dashboard'
 import Widget from './../components/Widget'
 import TrendsArea from './../components/TrendsArea'
-import Tweet from './../components/Tweet'
+import Tweet from './../components/Tweet' 
 
 class App extends Component {
 
@@ -15,7 +15,7 @@ class App extends Component {
 
     novoTweetIsValid() {
         const novoTweetLenght = this.state.novoTweet.length;
-
+ 
         return novoTweetLenght <= 140 && novoTweetLenght > 0
 
     }
@@ -81,7 +81,7 @@ class App extends Component {
                             </div>
                         </Widget>
                     </Dashboard>
-                </div>
+                </div> 
             </Fragment>
         );
     }
