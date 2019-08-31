@@ -1,43 +1,22 @@
-import React from 'react'
+import React from 'react';
 
-//DUMB Componente - functions - 
-//1
-//function NavBar () {
-//2 
-// export default function NavBar () {
-//3 
-// export default ()  =>  ( RETURN)
-//4
-// export default const Navbar = ()  => ()
+// dumb component
+// export default function NavBar() {
+// export default () => () <- return
+// export default const NavBar = () => () <- return
+
+// const superAdmin = true;
 
 export default function NavBar(props) {
-    return (
-        <nav>
-            <ul>
-                {props.links.map((link,index) => (
-                    <li key={index}>
-                        <a href="#">{link}</a>
-                    </li>
-
-                ))}
-                {/* <li>
-                        <a href="#">Home</a>
-                    </li>
-
-                    <li>
-                        <a href="#">Notifications</a>
-                    </li>
-
-                    <li>
-                        <a href="#">Menssages</a>
-                   </li>*/}
-            </ul>
-        </nav>
-
-    )
-
-
+  return (
+    <nav>
+      <ul>
+        {props.links.map((link, index) => (
+          <li key={index}>
+            <a href="#">{link}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
 }
-
-//export default NavBar;
-

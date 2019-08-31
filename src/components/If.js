@@ -1,11 +1,11 @@
-const If = ({ cond , children })  => {
-if(cond) {
+// import React from 'react';
+
+const If = ({ cond, children }) => {
+  if (cond) {
     return children;
-}
+  }
 
-return null;
-
-
-}
+  return null;
+};
 
 export default If;

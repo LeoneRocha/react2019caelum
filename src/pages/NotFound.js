@@ -1,13 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-///import './loginPage.css'
-
-const NotFound = () => (
-
-
-    <h1> OPSS! Pagina não Encontrada</h1>
-
-
+const NotFound = ({ match }) => (
+  <>
+    <h1>Você está perdido?</h1>
+    <p>A rota {match.url} não foi encontrada</p>
+  </>
 );
 
-export default NotFound
+export default NotFound;

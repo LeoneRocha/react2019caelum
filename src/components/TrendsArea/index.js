@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import './trendsArea.css'
 
 class TrendsArea extends Component {
-    
     render() {
         return (
             <div className="trendsArea">

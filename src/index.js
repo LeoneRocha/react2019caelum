@@ -11,24 +11,25 @@ import "./assets/css/notificacao.css";
 
 import "./assets/css/novoTweet.css";
 // import './index.css';
-//import Home from "./pages/Home";
-//import Login from "./pages/LoginPage/index";
 
-import Rotas from "./routers"
-import { BrowserRouter } from 'react-router-dom'
-import { NotificacaoProvider } from  "./contexts/notificacao";
+// import App from "./App";
+// import Home from "./pages/Home";
+// import Login from './pages/LoginPage';
+import { BrowserRouter } from 'react-router-dom';
+import Rotas from './routes';
+
+import { NotificacaoProvider } from './contexts/notificacao';
+
 import * as serviceWorker from "./serviceWorker";
 
-ReactDOM.render( 
-        <NotificacaoProvider >
-        <BrowserRouter>
-            <Rotas />
-        </BrowserRouter>
- </NotificacaoProvider>
-        , document.getElementById("root")) ;
+ReactDOM.render(
+  <NotificacaoProvider>
+    <BrowserRouter>
+      <Rotas />
+    </BrowserRouter>
+  </NotificacaoProvider>, document.getElementById("root"));
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
-  
