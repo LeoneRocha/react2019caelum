@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import './cabecalho.css'
 // import './navMenu.css'
 
@@ -16,5 +17,9 @@ function Cabecalho ({ children }) {
     </header>
   )
 }
+
+Cabecalho.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export default Cabecalho

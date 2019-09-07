@@ -3,11 +3,9 @@ import Cabecalho from '../../components/Cabecalho'
 import Widget from '../../components/Widget'
 import If from '../../components/If';
 
-import * as Loginservices from '../../Services/loginservices';
-
-
-
 import { NotificacaoContext } from './../../contexts/notificacao';
+// import { logar } from '../../services/login';
+import * as LoginService from '../../services/login';
 
 import './loginPage.css'
 
@@ -25,19 +23,40 @@ class LoginPage extends Component {
     const login = this.refs.login.value;
     const senha = this.refs.senha.value;
 
-    // XMLHttpRequest
-    // IE 6 -> axios
-    Loginservices.logar(login,senha).then(({data, respostaOK}) => {
-
-      if (respostaOK) {
+    LoginService.logar(login, senha)
+      .then(({ data, respostaOk }) => {
+        if (respostaOk) {
           localStorage.setItem('token', data.token);
           this.context.setMensagem('Login efetuado com sucesso! Bem vindo!');
           this.props.history.push('/');
-       } else {
-           // console.log(data);
+        } else {
+          // console.log(data);
           this.setState({ errorMessage: data.message });
-         } 
-      });
+        }
+      }).catch(err => console.log(err));
+
+    // XMLHttpRequest
+    // IE 6 -> axios
+    // fetch('https://api-twitelum.herokuapp.com/login', {
+    //   method: 'POST',
+    //   body: JSON.stringify({ login, senha })
+    // }).then(async (resposta) => {
+    //   // console.log('resposta:', resposta);
+    //   // console.log('resposta.body:', resposta.body); // Readable Stream
+
+    //   // resposta.status === 200
+    //   // if (!resposta.ok) throw new Error();
+    //   const data = await resposta.json();
+
+    //   if (resposta.ok) {
+    //     localStorage.setItem('token', data.token);
+    //     this.context.setMensagem('Login efetuado com sucesso! Bem vindo!');
+    //     this.props.history.push('/');
+    //   } else {
+    //     // console.log(data);
+    //     this.setState({ errorMessage: data.message });
+    //   }
+    // }).catch(err => console.log(err));
   }
 
   render() {

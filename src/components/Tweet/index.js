@@ -1,22 +1,44 @@
-import React, { Component } from 'react'
-import './tweet.css'
-import If from '../../components/If';
-import * as Twiteservice from '../../Services/twiteservice';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+// import If from './../If';
+import './tweet.css';
+
+import * as TweetsService from '../../services/tweets';
 
 class Tweet extends Component {
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+    id: PropTypes.string.isRequired,
+    nomeUsuario: PropTypes.string.isRequired,
+    userName: PropTypes.string.isRequired,
+    totalLikes: PropTypes.number.isRequired,
+    avatarUrl: PropTypes.string,
+    likeado: PropTypes.bool,
+    removivel: PropTypes.bool,
+    onDelete: PropTypes.func,
+    onSelect: PropTypes.func,
+  }
+  
+  static defaultProps = {
+    avatarUrl: '',
+    likeado: false,
+    removivel: false,
+    onDelete: () => {},
+    onSelect: null
+  }
 
   state = {
     likeado: this.props.likeado,
     totalLikes: this.props.totalLikes
-
   }
 
   handleCurtir = () => {
+    const { likeado, totalLikes } = this.state;
     const token = localStorage.getItem('token');
     const tweetId = this.props.id;
-    const { likeado, totalLikes } = this.state;
 
-    Twiteservice.likeTweet({ token, tweetId })
+    TweetsService.curtirTweet({ token, tweetId })
       .then(() => {
         this.setState({
           likeado: !likeado,
@@ -25,29 +47,36 @@ class Tweet extends Component {
       });
   }
 
-  handleApagar = () => {
+  handleDelete = () => {
     const token = localStorage.getItem('token');
     const { id, onDelete } = this.props;
 
-    Twiteservice.apagaTweet({ token, tweetId: id })
-      .then(() => {
-        this.props.onDelete(id);
-        console.log(id);
-      });
+    TweetsService.deleteTweet({ token, tweetId: id })
+      .then(() => onDelete(id));
   }
 
   handleSelect = (evento) => {
     const { id, onSelect } = this.props;
-    const clicouNoFooter = evento.target.closest('.tweet__footer'); 
-    if (onSelect && !clicouNoFooter) { onSelect(id); console.log('fuicliado') };
+    const clicouNoFooter = evento.target.closest('.tweet__footer');
 
+    if (onSelect && !clicouNoFooter) {
+      onSelect(id);
+    }
   }
 
   render() {
-    const { avatarUrl, nomeUsuario, userName, children/*, totalLikes*/, removivel } = this.props;
+    const {
+      avatarUrl,
+      nomeUsuario,
+      userName,
+      children,
+      removivel,
+      // totalLikes
+    } = this.props;
     const { totalLikes, likeado } = this.state;
+
     return (
-      <article className="tweet" onClick={this.handleSelect}>
+      <article className="tweet" onClick={this.handleSelect} >
         <div className="tweet__cabecalho">
           <img className="tweet__fotoUsuario" src={avatarUrl} alt="" />
           <span className="tweet__nomeUsuario">{nomeUsuario}</span>
@@ -57,9 +86,15 @@ class Tweet extends Component {
           <span>{children}</span>
         </p>
         <footer className="tweet__footer">
-          <button className="btn btn--clean" onClick={this.handleCurtir}>
-            <svg className={`icon icon--small iconHeart ${likeado ? 'iconHeart--active' : ''} `}
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.5 47.5">
+          <button
+            className="btn btn--clean"
+            onClick={this.handleCurtir}
+          >
+            <svg
+              className={`icon icon--small iconHeart ${likeado ? 'iconHeart--active' : ''}`}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 47.5 47.5"
+            >
               <defs>
                 <clipPath id="a">
                   <path d="M0 38h38V0H0v38z"></path>
@@ -71,9 +106,17 @@ class Tweet extends Component {
             </svg>
             {totalLikes}
           </button>
-          <If cond={removivel}>
-            <button className="btn btn--blue btn--remove" onClick={this.handleApagar}>X</button>
-          </If>
+
+          {/* <If cond={removivel}> */}
+          {removivel && ( // truthy
+            <button
+              className="btn btn--blue btn--remove"
+              onClick={this.handleDelete}
+              // onClick={() => onDelete(id)}
+            >
+              X
+            </button>
+          )}
         </footer>
       </article>
     )

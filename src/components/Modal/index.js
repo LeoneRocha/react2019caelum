@@ -1,41 +1,45 @@
-import React, { Component } from 'react'
-import './modal.css'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Widget from '../Widget';
 
+import './modal.css';
 
 class Modal extends Component {
- 
+  static propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired
+  }
 
-    handleCloseModal = (event) => {
-      const  onClose =  this.props.onClose;
-        const clicouNoConteudo = event.target.closest('.modal__conteudo');
+  static defaultProps = {
+    children: ''
+  }
 
-        console.log('onClose')
-        if (!clicouNoConteudo) {
-            onClose();
+  handleCloseModal = (event) => {
+    const { onClose } = this.props;
+    const clicouNoConteudo = event.target.closest('.modal__conteudo');
 
-            //this.setState({ isOpen: false });
-        }
-    } 
-    render() {
-
-        const { isOpen, onClose, children } = this.props;
-
-        return (
-            <div className={`modal ${isOpen ? 'modal--active' : ''} `} onClick={this.handleCloseModal} >
-                <div className="modal__conteudo" >
-                    <Widget>
-                        <h1>
-                            {isOpen && children}
-                        </h1>
-
-                    </Widget>
-                </div>
-
-            </div >
-        )
+    if (!clicouNoConteudo) {
+      onClose();
     }
+  }
 
+  render () {
+    const { isOpen, children } = this.props;
+
+    return (
+      <div
+        className={`modal ${isOpen ? 'modal--active' : ''}`}
+        onClick={this.handleCloseModal}
+      >
+        <div className="modal__conteudo">
+          <Widget>
+            {isOpen && children}
+          </Widget>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Modal;

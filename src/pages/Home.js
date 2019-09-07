@@ -3,13 +3,13 @@ import React, { Component, Fragment } from 'react';
 import Cabecalho from './../components/Cabecalho'
 import NavMenu from './../components/NavMenu'
 import Dashboard from './../components/Dashboard'
+import Modal from './../components/Modal';
 import Widget from './../components/Widget'
 import TrendsArea from './../components/TrendsArea'
 import Tweet from './../components/Tweet'
-import Modal from './../components/Modal'
 
-import * as Twiteservice from '../Services/twiteservice';
 // import { NotificacaoContext } from './../contexts/notificacao';
+import * as TweetsService from '../services/tweets';
 
 class Home extends Component {
   // constructor(props) {
@@ -20,57 +20,73 @@ class Home extends Component {
 
   state = {
     novoTweet: '',
-    tweetSelecionado :null,
-    listaTweets: []
+    listaTweets: [],
+    tweetSelecionado: null
   }
-
-  onDeleteTwwet = (tweetId) => {
-    // const token = localStorage.getItem('token');
-    //const tweetId = this.props.id;
-
-    const { listaTweets } = this.state;
-
-
-    this.setState({ listaTweets: listaTweets.filter((tweet) => tweet._id !== tweetId) })
-
-
-  }
-
 
   componentDidMount() {
     const token = localStorage.getItem('token');
 
-    Twiteservice.listaTweet({ token })
-      .then((listTweet) => {
+    TweetsService.listaTweets(token)
+      .then((listaDeTweets) => {
         this.setState({
-          listaTweets: listTweet
+          listaTweets: listaDeTweets
         });
       })
   }
 
-  handleCloseModal = (evento) => {
+  // componentDidUpdate() {}
 
-    this.setState({tweetSelecionado : null});
-  }
-
-onSelectTweet = (tweetId) => {
- const selecionado = this.state.listaTweets.find(tweet=> tweet._id === tweetId);
- this.setState({tweetSelecionado : selecionado});
-   }
+  // componentDidMount() {
+  //   window.addEventListener('resize', this.handleResize);
+  //   // conexão com socket
+  // }
+  // componentWillUnmount() {
+  //   window.removeEventListener('resize', this.handleResize);
+  //   // desconectar socket
+  // }
 
   handleCriaTweet = (evento) => {
-    // handleCriaTweet(evento) {
+  // handleCriaTweet(evento) {
     evento.preventDefault();
 
     const token = localStorage.getItem('token');
 
-    // fetch -> comunicação com API
+    TweetsService.criaTweet({
+      token,
+      conteudo: this.state.novoTweet
+    }).then((tweetCriado) => {
+      // atualizar state com objeto de tweet
+      // adaptação da renderização de tweets
+      this.setState({
+        novoTweet: '',
+        listaTweets: [tweetCriado, ...this.state.listaTweets]
+      });
+    }).catch(console.log);
+  }
 
-    Twiteservice.criaTweet({ token, conteudo: this.state.novoTweet }
-    ).then((tweetCriado) => { this.setState({ novoTweet: '', listaTweets: [tweetCriado, ...this.state.listaTweets] }) });
+  handleCloseModal = () => {
+    this.setState({
+      tweetSelecionado: null
+    })
+  }
 
-    // atualizar state com objeto de tweet
-    // adaptação da renderização de tweets
+  onSelectTweet = (tweetId) => {
+    const tweetSelecionado = this.state.listaTweets
+      .find(tweet => tweet._id === tweetId);
+
+    this.setState({
+      tweetSelecionado
+    });
+  }
+
+  onDeleteTweet = (tweetId) => {
+    const { listaTweets } = this.state;
+
+    this.setState({
+      listaTweets: listaTweets
+        .filter((tweet) => tweet._id !== tweetId)
+    });
   }
 
   novoTweetEstaValido() {
@@ -87,7 +103,7 @@ onSelectTweet = (tweetId) => {
 
   render() {
     // destructuring
-    const { novoTweet, listaTweets,tweetSelecionado } = this.state;
+    const { novoTweet, listaTweets, tweetSelecionado } = this.state;
     // const [primeiroTweet, segundoTweet] = listaTweets;
 
     // const novoTweet = this.state.novoTweet;
@@ -140,17 +156,17 @@ onSelectTweet = (tweetId) => {
                   <p>Twite alguma coisa! Vamos arranjar treta!</p>
                 )}
                 {/* adaptação da renderização de tweets */}
-                {listaTweets.map((tweet, index) => (
+                {listaTweets.map(tweet => (
                   <Tweet
                     key={tweet._id}
                     id={tweet._id}
-                    likeado={tweet.likeado}
                     nomeUsuario={`${tweet.usuario.nome} ${tweet.usuario.sobrenome}`}
                     userName={tweet.usuario.login}
                     totalLikes={tweet.totalLikes}
-                    avatarUrl={tweet.usuario.foto}
                     removivel={tweet.removivel}
-                    onDelete={this.onDeleteTwwet}
+                    likeado={tweet.likeado}
+                    avatarUrl={tweet.usuario.foto}
+                    onDelete={this.onDeleteTweet}
                     onSelect={this.onSelectTweet}
                   >
                     {tweet.conteudo}
@@ -159,24 +175,26 @@ onSelectTweet = (tweetId) => {
               </div>
             </Widget>
           </Dashboard>
-        </div> 
-        <Modal isOpen={Boolean(tweetSelecionado)} onClose={this.handleCloseModal}>
-        {Boolean(tweetSelecionado) &&  (<Tweet
-                    key={tweetSelecionado._id}
-                    id={tweetSelecionado._id}
-                    likeado={tweetSelecionado.likeado}
-                    nomeUsuario={`${tweetSelecionado.usuario.nome} ${tweetSelecionado.usuario.sobrenome}`}
-                    userName={tweetSelecionado.usuario.login}
-                    totalLikes={tweetSelecionado.totalLikes}
-                    avatarUrl={tweetSelecionado.usuario.foto}
-                    removivel={tweetSelecionado.removivel}
-                    
-                    
-                  >
-                    {tweetSelecionado.conteudo}
-                  </Tweet>)}
+        </div>
+        <Modal
+          isOpen={Boolean(tweetSelecionado)}
+          onClose={this.handleCloseModal}
+        >
+          {tweetSelecionado && (
+            <Tweet
+              id={tweetSelecionado._id}
+              nomeUsuario={`${tweetSelecionado.usuario.nome} ${tweetSelecionado.usuario.sobrenome}`}
+              userName={tweetSelecionado.usuario.login}
+              totalLikes={tweetSelecionado.totalLikes}
+              removivel={tweetSelecionado.removivel}
+              likeado={tweetSelecionado.likeado}
+              avatarUrl={tweetSelecionado.usuario.foto}
+              onDelete={this.onDeleteTweetSelecionado}
+            >
+              {tweetSelecionado.conteudo}
+            </Tweet>
+          )}
         </Modal>
- 
       </Fragment>
     );
   }
