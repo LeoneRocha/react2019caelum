@@ -38,21 +38,23 @@ class Tweet extends Component {
     const token = localStorage.getItem('token');
     const tweetId = this.props.id;
 
-    TweetsService.curtirTweet({ token, tweetId })
-      .then(() => {
-        this.setState({
-          likeado: !likeado,
-          totalLikes: totalLikes + (likeado ? -1 : 1)
-        });
-      });
+    // TweetsService.curtirTweet({ token, tweetId })
+    //   .then(() => {
+    //     this.setState({
+    //       likeado: !likeado,
+    //       totalLikes: totalLikes + (likeado ? -1 : 1)
+    //     });
+    //   });
   }
 
   handleDelete = () => {
-    const token = localStorage.getItem('token');
+    //const token = localStorage.getItem('token');
     const { id, onDelete } = this.props;
 
-    TweetsService.deleteTweet({ token, tweetId: id })
-      .then(() => onDelete(id));
+    // TweetsService.deleteTweet({ token, tweetId: id })
+    //   .then(() => onDelete(id));
+
+    onDelete(id);
   }
 
   handleSelect = (evento) => {

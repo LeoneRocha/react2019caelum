@@ -10,8 +10,12 @@ import TrendsArea from './../components/TrendsArea'
 import Tweet from './../components/Tweet'
 
 // import { NotificacaoContext } from './../contexts/notificacao';
-import * as TweetsService from '../services/tweets';
-import * as TweetsActions from '../actions/tweets';
+/* import * as TweetsService from '../services/tweets';*/
+//import * as TweetsActions from '../actions/tweets';
+import {  actions  as TweetsActions} from '../ducks/tweets';
+
+
+
 
 class Home extends Component {
   // constructor(props) {
@@ -45,45 +49,62 @@ class Home extends Component {
   // handleCriaTweet(evento) {
     evento.preventDefault();
 
-    const token = localStorage.getItem('token');
+    this.props.dispatch(TweetsActions.novoTweet(this.state.novoTweet))
+    .then(()=> this.setState({ novoTweet: '' }) );
+ 
+    // const token = localStorage.getItem('token');
 
-    TweetsService.criaTweet({
-      token,
-      conteudo: this.state.novoTweet
-    }).then((tweetCriado) => {
-      // atualizar state com objeto de tweet
-      // adaptação da renderização de tweets
+    // TweetsService.criaTweet({
+    //   token,
+    //   conteudo: this.state.novoTweet
+    // }).then((tweetCriado) => {
+    //   // atualizar state com objeto de tweet
+    //   // adaptação da renderização de tweets
 
-      this.setState({ novoTweet: '' });
-      this.props.dispatch({
-        type: 'tweets/novoTweet',
-        tweetCriado
-      });
-    }).catch(console.log);
+    //   this.setState({ novoTweet: '' });
+    //   this.props.dispatch({
+    //     type: 'tweets/novoTweet',
+    //     tweetCriado
+    //   });
+    // }).catch(console.log);
   }
 
   handleCloseModal = () => {
-    this.setState({
-      tweetSelecionado: null
-    })
+    // this.setState({
+    //   tweetSelecionado: null
+    // })
+
+    this.props.dispatch(TweetsActions.limpaSelecao());
+
+
   }
 
   onSelectTweet = (tweetId) => {
-    const tweetSelecionado = this.state.listaTweets
-      .find(tweet => tweet._id === tweetId);
+    // const tweetSelecionado = this.state.listaTweets
+    //   .find(tweet => tweet._id === tweetId);
 
-    this.setState({
-      tweetSelecionado
-    });
+    // this.setState({
+    //   tweetSelecionado
+    // });
+
+    this.props.dispatch(TweetsActions.selectTweet(tweetId));
+
   }
 
   onDeleteTweet = (tweetId) => {
-    const { listaTweets } = this.state;
+    //const { listaTweets } = this.state;
 
-    this.setState({
-      listaTweets: listaTweets
-        .filter((tweet) => tweet._id !== tweetId)
-    });
+    // this.setState({
+    //   listaTweets: listaTweets
+    //     .filter((tweet) => tweet._id !== tweetId)
+    // });
+
+    this.props.dispatch(TweetsActions.apagaTweet(tweetId));
+     
+
+  // TweetsService.deleteTweet({ token, tweetId: id })
+  //     .then(() => onDelete(id));
+
   }
 
   novoTweetEstaValido() {
@@ -100,10 +121,10 @@ class Home extends Component {
 
   render() {
     // destructuring
-    const { novoTweet, tweetSelecionado } = this.state;
+    const { novoTweet/*, tweetSelecionado*/ } = this.state;
     // const [primeiroTweet, segundoTweet] = listaTweets;
 
-    const { listaDaStore } = this.props;
+    const { listaDaStore, tweetSelecionado } = this.props;
     console.log(listaDaStore);
 
     // const novoTweet = this.state.novoTweet;
@@ -189,7 +210,7 @@ class Home extends Component {
               removivel={tweetSelecionado.removivel}
               likeado={tweetSelecionado.likeado}
               avatarUrl={tweetSelecionado.usuario.foto}
-              onDelete={this.onDeleteTweetSelecionado}
+              onDelete={this.onDeleteTweet}
             >
               {tweetSelecionado.conteudo}
             </Tweet>
@@ -204,6 +225,7 @@ function mapStateToProps (stateDaStore) {
   return {
     // nomeDaProp: stateDaStore
     listaDaStore: stateDaStore.lista
+    ,tweetSelecionado : stateDaStore.lista.find(tweet => tweet._id === stateDaStore.tweetSelecionado)
   };
 }
 

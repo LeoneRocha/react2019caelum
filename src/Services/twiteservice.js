@@ -41,11 +41,9 @@ export function apagaTweet({ token,   tweetId  }) {
 
 }; 
  
-export function listaTweet({ token  }) {
-
+export function listaTweet({ token  }) { 
     return fetch(`${config.apiRoot}/tweets?X-AUTH-TOKEN=${token}` )
-     .then( (response) => {         return   response.json();
-
+     .then( (response) => {         return   response.json(); 
         //if (response.ok) {
         // notificacao
         // this.setState({
