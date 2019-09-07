@@ -16,14 +16,9 @@ export function criaTweet({ token, conteudo }) {
         //  novoTweet: '',
         //   listaTweets: [tweetCriado, ...this.state.listaTweets]
         //  });
-        //}
-
-
-        //return { tweetCriado, respostaOK: resposta.ok };
-
-
-    }).catch(console.log);
-
+        //} 
+        //return { tweetCriado, respostaOK: resposta.ok }; 
+    }).catch(console.log); 
 }; 
 
 export function apagaTweet({ token,   tweetId  }) {

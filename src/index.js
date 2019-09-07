@@ -20,14 +20,19 @@ import Rotas from './routes';
 
 import { NotificacaoProvider } from './contexts/notificacao';
 
+import store from './store';
+import { Provider } from 'react-redux';
+
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
-  <NotificacaoProvider>
-    <BrowserRouter>
-      <Rotas />
-    </BrowserRouter>
-  </NotificacaoProvider>, document.getElementById("root"));
+  <Provider store={store} >
+    <NotificacaoProvider>
+      <BrowserRouter>
+        <Rotas />
+      </BrowserRouter>
+    </NotificacaoProvider>
+  </Provider>, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

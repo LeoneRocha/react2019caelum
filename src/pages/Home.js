@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import Cabecalho from './../components/Cabecalho'
 import NavMenu from './../components/NavMenu'
@@ -29,9 +30,16 @@ class Home extends Component {
 
     TweetsService.listaTweets(token)
       .then((listaDeTweets) => {
-        this.setState({
-          listaTweets: listaDeTweets
+        // window.store.dispatch({
+        this.props.dispatch({
+          type: 'tweets/atualizaLista',
+          // listaDeTweets: listaDeTweets
+          listaDeTweets
         });
+
+        // this.setState({
+        //   listaTweets: listaDeTweets
+        // });
       })
   }
 
@@ -52,16 +60,33 @@ class Home extends Component {
 
     const token = localStorage.getItem('token');
 
+    //const { listaDaStore } = this.props;
+
+
     TweetsService.criaTweet({
       token,
       conteudo: this.state.novoTweet
     }).then((tweetCriado) => {
       // atualizar state com objeto de tweet
-      // adaptação da renderização de tweets
+     // adaptação da renderização de tweets
       this.setState({
-        novoTweet: '',
-        listaTweets: [tweetCriado, ...this.state.listaTweets]
+        novoTweet: '' 
+        //,listaTweets: [tweetCriado, ...this.state.listaTweets]
       });
+
+      // this.props.dispatch({
+      //   type: 'tweets/atualizaLista',
+      //   // listaDeTweets: listaDeTweets
+      //   listaDeTweets: [tweetCriado, ...listaDaStore]
+      // });
+      this.props.dispatch({
+          type: 'tweets/novoTweet',
+          tweetCriado
+          // listaDeTweets: listaDeTweets
+          //listaDeTweets: [tweetCriado, ...listaDaStore]
+        });
+  
+
     }).catch(console.log);
   }
 
@@ -103,8 +128,11 @@ class Home extends Component {
 
   render() {
     // destructuring
-    const { novoTweet, listaTweets, tweetSelecionado } = this.state;
+    const { novoTweet, tweetSelecionado } = this.state;
     // const [primeiroTweet, segundoTweet] = listaTweets;
+
+    const { listaDaStore } = this.props;
+    console.log(listaDaStore);
 
     // const novoTweet = this.state.novoTweet;
     // const listaTweets = this.state.listaTweets;
@@ -152,11 +180,11 @@ class Home extends Component {
             <Widget>
               <div className="tweetsArea">
                 {/* truthy */}
-                {!listaTweets.length && (
+                {!listaDaStore.length && (
                   <p>Twite alguma coisa! Vamos arranjar treta!</p>
                 )}
                 {/* adaptação da renderização de tweets */}
-                {listaTweets.map(tweet => (
+                {listaDaStore.map(tweet => (
                   <Tweet
                     key={tweet._id}
                     id={tweet._id}
@@ -200,4 +228,14 @@ class Home extends Component {
   }
 }
 
-export default Home;
+function mapStateToProps (stateDaStore) {
+  return {
+    // nomeDaProp: stateDaStore
+    listaDaStore: stateDaStore.lista
+  };
+}
+
+// const HomeConectadaComStore = connect(mapStateToProps)(Home);
+// export default HomeConectadaComStore;
+
+export default connect(mapStateToProps)(Home);
