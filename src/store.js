@@ -1,5 +1,6 @@
-import { createStore } from 'redux';
-import { createStore } from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
+
 // trata ação do usuário
 // function reducer (store = {}, action) {
 //   // tratar as ações
@@ -41,19 +42,22 @@ function tweetsReducer (store = stateInicial, action) {
         ...store,
         lista: action.listaDeTweets
       };
-      case 'tweets/novoTweet':
+
+    case 'tweets/novoTweet':
       return {
         ...store,
-        lista:  [action.tweetCriado, ...store.lista]
+        lista: [action.tweetCriado, ...store.lista]
       };
-
 
     default:
       return store;
   }
 }
 
-const store = createStore(tweetsReducer);
+const store = createStore(
+  tweetsReducer,
+  applyMiddleware(reduxThunk)
+);
 
 // window.store = store;
 

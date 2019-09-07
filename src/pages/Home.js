@@ -11,6 +11,7 @@ import Tweet from './../components/Tweet'
 
 // import { NotificacaoContext } from './../contexts/notificacao';
 import * as TweetsService from '../services/tweets';
+import * as TweetsActions from '../actions/tweets';
 
 class Home extends Component {
   // constructor(props) {
@@ -26,21 +27,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token');
-
-    TweetsService.listaTweets(token)
-      .then((listaDeTweets) => {
-        // window.store.dispatch({
-        this.props.dispatch({
-          type: 'tweets/atualizaLista',
-          // listaDeTweets: listaDeTweets
-          listaDeTweets
-        });
-
-        // this.setState({
-        //   listaTweets: listaDeTweets
-        // });
-      })
+    this.props.dispatch(TweetsActions.listaTweets());
   }
 
   // componentDidUpdate() {}
@@ -60,33 +47,18 @@ class Home extends Component {
 
     const token = localStorage.getItem('token');
 
-    //const { listaDaStore } = this.props;
-
-
     TweetsService.criaTweet({
       token,
       conteudo: this.state.novoTweet
     }).then((tweetCriado) => {
       // atualizar state com objeto de tweet
-     // adaptação da renderização de tweets
-      this.setState({
-        novoTweet: '' 
-        //,listaTweets: [tweetCriado, ...this.state.listaTweets]
-      });
+      // adaptação da renderização de tweets
 
-      // this.props.dispatch({
-      //   type: 'tweets/atualizaLista',
-      //   // listaDeTweets: listaDeTweets
-      //   listaDeTweets: [tweetCriado, ...listaDaStore]
-      // });
+      this.setState({ novoTweet: '' });
       this.props.dispatch({
-          type: 'tweets/novoTweet',
-          tweetCriado
-          // listaDeTweets: listaDeTweets
-          //listaDeTweets: [tweetCriado, ...listaDaStore]
-        });
-  
-
+        type: 'tweets/novoTweet',
+        tweetCriado
+      });
     }).catch(console.log);
   }
 
